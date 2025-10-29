@@ -54,8 +54,9 @@ def add_contact(contact: Contact):
 
 @app.delete('/contacts/{contact_id}')
 
-def delete_contact(contact_id):
+def delete_contact(contact_id:int):
     for index, contact in enumerate(all_contacts):
         if contact['contact_id']== contact_id:
             all_contacts.pop(index)
-            return all_contacts
+            return {"message": "Contact deleted successfully!"}
+        return {"error": "Contact not found!"}, 404

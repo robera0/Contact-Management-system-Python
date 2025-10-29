@@ -2,10 +2,12 @@ import { Plus, Trash } from 'lucide-react';
 import { useQuery } from "@tanstack/react-query";
 import AddContact from "./AddContact";
 import { useState } from 'react';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const Home = () => {
    const [showAddForm, setShowAddForm] = useState(false);
    const [deleteContact,setdeleteContact]=useState(false)
+    const queryClient = useQueryClient();
   const fetchContacts = async () => {
     const res = await fetch('http://127.0.0.1:8000/contacts');
     if (!res.ok) throw new Error("Failed to fetch contacts");
@@ -16,12 +18,32 @@ const Home = () => {
     queryKey: ['contacts'],
     queryFn: fetchContacts
   });
+ 
+    const DeleteMutation=async(contact_id) => {
+    const res = await fetch(`http://127.0.0.1:8000/contacts/${contact_id}`,{
+        method:"DELETE",
+      });
 
-  const handleDeletecontact=(index)=>{
+      if (!res.ok) throw new Error ("Failed to delete contact")
+      return res.json()
 
   }
 
-  const contact_lenght= data?.length || 0
+   const deleteMutation=useMutation({
+    mutationFn:DeleteMutation,
+    onSuccess:()=>{
+      queryClient.invalidateQueries(['contacts'])
+    }
+    
+  })
+const handleDelete = (id) => {
+  if (window.confirm("Are you sure you want to delete this contact?")) {
+    deleteMutation.mutate(id);
+ 
+  }
+};
+const contact_length = data?.contacts?.length || 0;
+
 
   return (
     <div className='relative flex h-screen justify-center bg-gray-400'>
@@ -73,10 +95,10 @@ const Home = () => {
               <span className='w-[10%] text-center'>{contact.age}</span>
               <span className='w-[25%] text-center'>{contact.address}</span>
               <span className='w-[20%] text-center'>{contact.contact}</span>
-
+          
               {deleteContact && (
                 <span className='w-[5%] flex justify-center'>
-                  <button className='flex justify-center items-center w-8 h-8 hover:scale-95 transition transform duration-400 cursor-pointer rounded'>
+                  <button onClick={()=>handleDelete(contact.contact_id)} className='flex justify-center items-center w-8 h-8 hover:scale-95 transition transform duration-400 cursor-pointer rounded'>
                     <Trash strokeWidth={3} className='w-5 h-5 text-red-600' />
                   </button>
                 </span>
@@ -90,7 +112,7 @@ const Home = () => {
         <div className='absolute top-20 left-4'>
         {showAddForm && 
       <AddContact
-      contact_id={contact_lenght + 1}
+      contact_id={contact_length + 1}
       onClose={() => setShowAddForm(false)} 
       />}
       </div>

@@ -13,7 +13,7 @@ const AddContact = ({onClose,contact_id}) => {
 
 
   const addContact=async (new_contact) => {
-    const res = await fetch('http://127.0.0.1:8000/contacts',{
+    const res = await fetch(`http://127.0.0.1:8000/contacts`,{
         method:"POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(new_contact),
@@ -32,7 +32,7 @@ const AddContact = ({onClose,contact_id}) => {
     
   })
 
-     const handleSubmit = (e) => {
+   const handleSubmit = (e) => {
     e.preventDefault();
 
     const contactData = {
