@@ -2,7 +2,7 @@ import { X } from 'lucide-react';
 import { useState } from 'react';
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-const AddContact = ({onClose}) => {
+const AddContact = ({onClose,contact_id}) => {
   const queryClient = useQueryClient();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -36,6 +36,7 @@ const AddContact = ({onClose}) => {
     e.preventDefault();
 
     const contactData = {
+      contact_id:contact_id,
       first_name: firstName,
       last_name: lastName,
       contact:contact,

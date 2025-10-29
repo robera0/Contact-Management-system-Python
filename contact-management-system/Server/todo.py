@@ -17,6 +17,7 @@ app.add_middleware(
 )
 
 class Contact(BaseModel):
+    contact_id:int
     first_name: str
     last_name: str
     gender: str
@@ -26,6 +27,7 @@ class Contact(BaseModel):
 
 all_contacts=[
     {
+    "contact_id":0,
     "first_name":"Robera",
     "last_name":"Araraa",
     "gender":"Male",
@@ -47,3 +49,13 @@ def get_contacts():
 def add_contact(contact: Contact):
     all_contacts.append(contact.dict())
     return {"message": "Added new contact successfully!", "data": all_contacts}
+
+# DELETE endpoint to delete a  contact
+
+@app.delete('/contacts/{contact_id}')
+
+def delete_contact(contact_id):
+    for index, contact in enumerate(all_contacts):
+        if contact['contact_id']== contact_id:
+            all_contacts.pop(index)
+            return all_contacts
