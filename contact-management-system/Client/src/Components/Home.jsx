@@ -1,7 +1,10 @@
 import { Plus, Trash } from 'lucide-react';
 import { useQuery } from "@tanstack/react-query";
+import AddContact from "./AddContact";
+import { useState } from 'react';
 
 const Home = () => {
+   const [showAddForm, setShowAddForm] = useState(false);
 
   const fetchContacts = async () => {
     const res = await fetch('http://127.0.0.1:8000/contacts');
@@ -15,7 +18,7 @@ const Home = () => {
   });
 
   return (
-    <div className='flex h-screen justify-center bg-gray-400'>
+    <div className='relative flex h-screen justify-center bg-gray-400'>
       <div className='w-[50%] mb-12 bg-white flex flex-col  items-center gap-12 rounded-xl shadow-xl mt-8 py-6'>
 
         {/* Header */}
@@ -23,12 +26,12 @@ const Home = () => {
 
         {/* Buttons */}
         <div className='w-[80%] flex justify-between'>
-          <button className='flex justify-center items-center w-24 h-10 gap-2 bg-green-400 cursor-pointer rounded'>
+          <button onClick={() => setShowAddForm(true)}  className='flex justify-center items-center w-24 h-10 gap-2 bg-green-400 hover:scale-95 transition transform duration-400 cursor-pointer rounded'>
             <Plus strokeWidth={3} className='w-5 h-5 text-white' />
             <span className='text-white font-semibold'>Add</span>
           </button>
 
-          <button className='flex justify-center items-center w-24 h-10 gap-2 bg-red-600 cursor-pointer rounded'>
+          <button className='flex justify-center items-center w-24 h-10 gap-2 bg-red-600 hover:scale-95 transition transform duration-400 cursor-pointer rounded'>
             <Trash strokeWidth={3} className='w-5 h-5 text-white' />
             <span className='text-white font-semibold'>Delete</span>
           </button>
@@ -67,7 +70,13 @@ const Home = () => {
         </div>
 
       </div>
+        <div className='absolute top-20 left-4'>
+        {showAddForm && 
+      <AddContact onClose={() => setShowAddForm(false)} 
+      />}
+      </div>
     </div>
+    
   );
 };
 
